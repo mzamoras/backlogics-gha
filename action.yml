@@ -24,7 +24,7 @@ runs:
    using: 'composite'
    steps:
       - uses: actions/checkout@v2
-        if: inputs.script-path == 'create'
+        if: inputs.script-action == 'create'
 
       - id: python-permissions
         run: |
@@ -34,7 +34,7 @@ runs:
         shell: bash
 
       - id: python-script-create
-        if: inputs.script-path == 'create'
+        if: inputs.script-action == 'create'
         run: |
           python3 ${{inputs.script-path}}/deployer.py \
           --repository=${{github.repository}} \
@@ -47,7 +47,7 @@ runs:
         shell: bash
 
       - id: python-script-delete
-        if: inputs.script-path == 'delete'
+        if: inputs.script-action == 'delete'
         run: |
           python3 ${{inputs.script-path}}/deployer.py \
           --repository=${{github.repository}} \
@@ -61,7 +61,7 @@ runs:
         shell: bash
 
       - uses: marocchino/sticky-pull-request-comment@v2
-        if: inputs.script-path == 'create'
+        if: inputs.script-action == 'create'
         with:
           header: "Deploy Environment Information"
           message: |
