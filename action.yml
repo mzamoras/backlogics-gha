@@ -1,0 +1,76 @@
+name: 'Backlogics Github Actions'
+description: 'Development Environments'
+inputs:
+  service-port:
+    description: 'Service Port'
+    required: false
+    default: '3000'
+  port-range:
+    description: 'Port Range'
+    required: false
+    default: '3120:3140'
+  domain:
+    description: 'Domain name'
+    required: true
+  script-path:
+    description: 'Deployer Path'
+    required: true
+  script-action:
+    description: 'Script Action'
+    required: false
+    default: 'create'
+
+runs:
+   using: 'composite'
+   steps:
+      - uses: actions/checkout@v2
+        if: inputs.script-path == 'create'
+
+      - id: python-permissions
+        run: |
+          python3 --version
+          chmod +x ${{inputs.script-path}}/deployer.py
+          chmod +x ${{inputs.script-path}}/deployTools.py
+        shell: bash
+
+      - id: python-script-create
+        if: inputs.script-path == 'create'
+        run: |
+          python3 ${{inputs.script-path}}/deployer.py \
+          --repository=${{github.repository}} \
+          --ref=${{github.ref_name}} \
+          --workspace=${{github.workspace}} \
+          --ports=${{inputs.port-range}} \
+          --service_port=${{inputs.service-port}} \
+          --pr="${{github.event.pull_request.number}}" \
+          --domain=${{inputs.domain}}
+        shell: bash
+
+      - id: python-script-delete
+        if: inputs.script-path == 'delete'
+        run: |
+          python3 ${{inputs.script-path}}/deployer.py \
+          --repository=${{github.repository}} \
+          --ref=${{ github.event.pull_request.number }}/merge \
+          --workspace=${{github.workspace}} \
+          --ports=${{inputs.port-range}} \
+          --service_port=${{inputs.service-port}} \
+          --pr="${{github.event.pull_request.number}}" \
+          --action="delete" \
+          --domain=${{inputs.domain}}
+        shell: bash
+
+      - uses: marocchino/sticky-pull-request-comment@v2
+        if: inputs.script-path == 'create'
+        with:
+          header: "Deploy Environment Information"
+          message: |
+            Environment Successfully Created
+
+            Dev Domain: [${{env.DOMAIN}}](http://${{env.DOMAIN}})
+            Image Name: ${{env.IDNAMING}} - ${{env.IMAGEID}}
+            Port: ${{env.PORT}}
+            Token: ${{env.TOKEN}}
+            IP: ${{env.IP}}
+
+
