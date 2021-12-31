@@ -69,7 +69,7 @@ runs:
 
             Dev Domain: [${{env.SCRIPT_DOMAIN}}](http://${{env.SCRIPT_DOMAIN}})
             Image Name: ${{env.SCRIPT_IDNAMING}} - ${{env.SCRIPT_IMAGEID}}
-            Port: ${{env.PORT}}
+            Port: ${{env.SCRIPT_PORT}}
             Token: ${{env.SCRIPT_TOKEN}}
             IP: ${{env.SCRIPT_IP}}
 
