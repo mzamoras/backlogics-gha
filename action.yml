@@ -67,10 +67,10 @@ runs:
           message: |
             Environment Successfully Created
 
-            Dev Domain: [${{env.DOMAIN}}](http://${{env.DOMAIN}})
-            Image Name: ${{env.IDNAMING}} - ${{env.IMAGEID}}
+            Dev Domain: [${{env.SCRIPT_DOMAIN}}](http://${{env.SCRIPT_DOMAIN}})
+            Image Name: ${{env.SCRIPT_IDNAMING}} - ${{env.SCRIPT_IMAGEID}}
             Port: ${{env.PORT}}
-            Token: ${{env.TOKEN}}
-            IP: ${{env.IP}}
+            Token: ${{env.SCRIPT_TOKEN}}
+            IP: ${{env.SCRIPT_IP}}
 
 
